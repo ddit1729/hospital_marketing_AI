@@ -127,6 +127,7 @@ export default function Home() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamingContent, setStreamingContent] = useState("");
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [brandResult, setBrandResult] = useState<BrandResultData | null>(null);
   const [inputValue, setInputValue] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -139,6 +140,7 @@ export default function Home() {
     if (isLoading) return;
 
     setInputValue("");
+    setIsGeneratingReport(false);
     const userMessage: Message = { role: "user", content: userText };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
@@ -178,7 +180,14 @@ export default function Home() {
               const parsed = JSON.parse(data);
               if (parsed.text) {
                 fullText += parsed.text;
-                setStreamingContent(fullText);
+                // JSON 블록이 시작되면 그 앞 텍스트만 말풍선에 표시
+                const jsonStart = fullText.indexOf("```json");
+                if (jsonStart !== -1) {
+                  setIsGeneratingReport(true);
+                  setStreamingContent(fullText.slice(0, jsonStart).trim());
+                } else {
+                  setStreamingContent(fullText);
+                }
               }
             } catch {
               // ignore parse errors
@@ -190,6 +199,7 @@ export default function Home() {
       const assistantMessage: Message = { role: "assistant", content: fullText };
       setMessages((prev) => [...prev, assistantMessage]);
       setStreamingContent("");
+      setIsGeneratingReport(false);
 
       const result = parseBrandResult(fullText);
       if (result) {
@@ -301,12 +311,32 @@ export default function Home() {
           })}
 
           {/* Streaming bubble */}
-          {isLoading && (
+          {isLoading && !isGeneratingReport && (
             <ChatBubble
               role="assistant"
               content={streamingContent}
               isStreaming={true}
             />
+          )}
+          {isLoading && isGeneratingReport && (
+            <>
+              {streamingContent && (
+                <ChatBubble role="assistant" content={streamingContent} />
+              )}
+              <div className="flex items-end gap-2 mb-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1B3A6B] flex items-center justify-center text-white text-xs font-bold shadow">
+                  AI
+                </div>
+                <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm flex items-center gap-3">
+                  <div className="flex gap-1">
+                    <span className="w-2 h-2 bg-[#1B3A6B] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-2 h-2 bg-[#1B3A6B] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-2 h-2 bg-[#1B3A6B] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                  <p className="text-sm text-gray-600">잠깐만요, 브랜드 방향을 정리하고 있어요...</p>
+                </div>
+              </div>
+            </>
           )}
 
           <div ref={bottomRef} />
