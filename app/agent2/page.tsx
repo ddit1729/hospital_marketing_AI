@@ -271,6 +271,15 @@ export default function Agent2Page() {
                 index.html 다운로드
               </button>
               <button
+                onClick={() => router.push("/agent3")}
+                className="w-full py-2.5 border border-[#1B3A6B] text-[#1B3A6B] rounded-xl text-sm font-medium hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                블로그 글 생성하러 가기
+              </button>
+              <button
                 onClick={() => { setGenState("idle"); setGeneratedHtml(""); setProgress(0); }}
                 className="w-full py-2.5 border border-gray-200 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors"
               >
