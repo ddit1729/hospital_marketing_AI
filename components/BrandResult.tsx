@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface TargetPatient {
@@ -32,6 +33,38 @@ interface BrandResultProps {
 
 export default function BrandResult({ data }: BrandResultProps) {
   const router = useRouter();
+
+  // 결과 출력 완료 시 서버에 저장 (mount 시 1회)
+  useEffect(() => {
+    const payload = {
+      clinic_id: "",
+      generated_at: "",
+      clinic_type: data.specialty,
+      location: data.location,
+      one_line: data.oneLiner,
+      target_patient: data.targetPatient?.summary ?? "",
+      voice_sample: data.brandTone,
+      never_do: Array.isArray(data.neverDo) ? data.neverDo : [],
+      keywords: data.contentKeywords ?? [],
+      content_directions: (data.contentDirection ?? []).map((d) =>
+        typeof d === "string" ? d : d.direction
+      ),
+      doctor_motivation: "",
+      anti_pattern: "",
+      favorite_patient_type: data.targetPatient?.personality ?? "",
+      ideal_patient: data.targetPatient?.behavior ?? "",
+      pain_patient: "",
+      future_reputation: "",
+      differentiation: "",
+    };
+
+    fetch("/api/branding/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch((e) => console.error("[branding/save]", e));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleGenerateHomepage = () => {
     localStorage.setItem("brandResultForHomepage", JSON.stringify(data));
