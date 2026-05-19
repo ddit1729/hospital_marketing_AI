@@ -237,9 +237,19 @@ export default function Home() {
               <p className="text-xs text-blue-200">우리 병원만의 색깔 찾기</p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-blue-200">예상 소요시간</p>
-            <p className="text-sm font-semibold">10~15분</p>
+          <div className="flex items-center gap-2">
+            <a
+              href="/agent2"
+              className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-medium transition-colors"
+            >
+              홈페이지
+            </a>
+            <a
+              href="/agent3"
+              className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-medium transition-colors"
+            >
+              블로그
+            </a>
           </div>
         </div>
       </header>
