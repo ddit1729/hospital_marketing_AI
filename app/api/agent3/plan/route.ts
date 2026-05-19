@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { readdir, readFile } from 'fs/promises'
+import { readdir, readFile, writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { BrandingResult } from '@/types/branding'
 
@@ -71,6 +71,17 @@ export async function POST(): Promise<Response> {
     const text = msg.content.find(c => c.type === 'text')?.text ?? '[]'
     const clean = text.replace(/```json|```/g, '').trim()
     const plan = JSON.parse(clean)
+
+    // 기획 결과 저장
+    const clinic_id = b.clinic_id ?? `clinic_${Date.now()}`
+    const plansDir = path.join(process.cwd(), 'data', 'plans')
+    await mkdir(plansDir, { recursive: true })
+    const filename = `${clinic_id}.json`
+    await writeFile(
+      path.join(plansDir, filename),
+      JSON.stringify({ generated_at: new Date().toISOString(), clinic_id, plan }, null, 2),
+      'utf-8'
+    )
 
     return Response.json({ ok: true, plan, branding: b })
   } catch (e) {

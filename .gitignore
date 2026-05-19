@@ -42,3 +42,4 @@ next-env.d.ts
 
 # branding data
 data/clinics/*.json
+data/plans/*.json
