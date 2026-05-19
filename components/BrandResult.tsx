@@ -38,6 +38,7 @@ export default function BrandResult({ data }: BrandResultProps) {
   useEffect(() => {
     const payload = {
       clinic_id: "",
+      clinic_name: data.clinicName,
       generated_at: "",
       clinic_type: data.specialty,
       location: data.location,

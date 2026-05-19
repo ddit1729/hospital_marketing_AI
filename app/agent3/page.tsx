@@ -35,6 +35,12 @@ export default function Agent3Page() {
       .then(d => { if (d.ok && d.data) setBranding(d.data) })
   }, [])
 
+  useEffect(() => {
+    fetch('/api/agent3/load')
+      .then(r => r.json())
+      .then(d => { if (d.ok && d.plan.length > 0) setPlan(d.plan) })
+  }, [])
+
   async function handleGenerate() {
     setLoading(true)
     setError('')

@@ -1,5 +1,6 @@
 export interface BrandingResult {
   clinic_id: string
+  clinic_name: string
   generated_at: string
   clinic_type: string
   location: string
