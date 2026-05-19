@@ -24,6 +24,7 @@ interface ContentDirectionItem {
 }
 
 interface BrandResultData {
+  clinicName: string;
   specialty: string;
   location: string;
   oneLiner: string;
@@ -37,15 +38,17 @@ interface BrandResultData {
 const QUESTION_EXAMPLES: string[][] = [
   // aiMsgIndex 0 — 진료과목 질문: 칩 선택 UI 사용, 텍스트 힌트 없음
   [],
-  // aiMsgIndex 1 — Q1-b: 동네 선택 이유
+  // aiMsgIndex 1 — Q1-b: 병원 이름 (힌트 없음)
+  [],
+  // aiMsgIndex 2 — Q1-c: 동네 선택 이유
   [
     "집에서 가까워서요. 내가 살고 싶은 동네에 내 병원을 열고 싶었어요",
     "재개발 예정 지역이라 젊은 가족이 많이 들어올 것 같았어요",
     "이 동네에 이런 과목 병원이 없더라고요. 공백이 보였어요",
   ],
-  // aiMsgIndex 2 — Q1-c: 지역명 직접 입력 (힌트 없음, 입력창만 표시)
+  // aiMsgIndex 3 — Q1-d: 지역명 직접 입력 (힌트 없음)
   [],
-  // aiMsgIndex 3 — Q2: 이 일을 하는 이유
+  // aiMsgIndex 4 — Q2: 이 일을 하는 이유
   [
     "어릴 때 치과가 너무 무서웠는데, 친절한 선생님 한 분이 달라지게 해줬어요",
     "환자가 나아지는 걸 눈으로 볼 수 있는 직업이잖아요. 그게 좋아요",

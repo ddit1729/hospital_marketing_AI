@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 interface TargetPatient {
   ageGender: string;
   personality: string;
@@ -13,6 +15,7 @@ interface ContentDirectionItem {
 }
 
 interface BrandResultData {
+  clinicName: string;
   specialty: string;
   location: string;
   oneLiner: string;
@@ -28,6 +31,13 @@ interface BrandResultProps {
 }
 
 export default function BrandResult({ data }: BrandResultProps) {
+  const router = useRouter();
+
+  const handleGenerateHomepage = () => {
+    localStorage.setItem("brandResultForHomepage", JSON.stringify(data));
+    router.push("/agent2");
+  };
+
   return (
     <div className="my-4 mx-2">
       <div className="bg-gradient-to-br from-[#1B3A6B] to-[#2a5298] rounded-2xl p-6 text-white shadow-lg">
@@ -38,14 +48,17 @@ export default function BrandResult({ data }: BrandResultProps) {
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">
               ✨
             </div>
-            <h2 className="text-lg font-bold">우리 병원 브랜드 리포트</h2>
+            <div>
+              <h2 className="text-lg font-bold leading-tight">
+                {data.clinicName || "우리 병원"} 브랜드 리포트
+              </h2>
+              {(data.specialty || data.location) && (
+                <p className="text-xs text-blue-200 mt-0.5">
+                  {[data.specialty, data.location].filter(Boolean).join(" · ")}
+                </p>
+              )}
+            </div>
           </div>
-          {/* 진료과목 + 지역명 뱃지 */}
-          {(data.specialty || data.location) && (
-            <span className="text-xs bg-white/20 rounded-full px-3 py-1 font-medium whitespace-nowrap">
-              {[data.specialty, data.location].filter(Boolean).join(" · ")}
-            </span>
-          )}
         </div>
 
         {/* 한 줄 정의 */}
@@ -150,6 +163,19 @@ export default function BrandResult({ data }: BrandResultProps) {
           이 결과는 원장님과의 대화를 바탕으로 생성된 브랜드 방향입니다.<br />
           의료광고법 준수 여부는 전문가와 추가 검토를 권장드립니다.
         </p>
+
+        {/* 홈페이지 생성 버튼 */}
+        <button
+          onClick={handleGenerateHomepage}
+          className="mt-4 w-full py-3.5 bg-white text-[#1B3A6B] rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18" />
+            <path d="M9 21V9" />
+          </svg>
+          홈페이지 생성하기
+        </button>
       </div>
     </div>
   );
