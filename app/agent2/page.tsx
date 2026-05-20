@@ -72,46 +72,35 @@ export default function Agent2Page() {
     setGeneratedHtml("");
     setProgress(0);
 
+    // 로딩 중 프로그레스 애니메이션 (fake)
+    let fakeProgress = 0;
+    const timer = setInterval(() => {
+      fakeProgress = Math.min(85, fakeProgress + Math.random() * 8);
+      setProgress(Math.round(fakeProgress));
+    }, 400);
+
     try {
-      const res = await fetch("/api/generate-homepage", {
+      // 1. 저장된 브랜딩 데이터 로드
+      const brandingRes = await fetch("/api/branding/load");
+      const brandingData = await brandingRes.json();
+      if (!brandingData.ok || !brandingData.data) throw new Error("브랜딩 데이터 없음");
+
+      // 2. 템플릿 기반 홈페이지 생성
+      const res = await fetch("/api/agent2/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ brandResult }),
+        body: JSON.stringify(brandingData.data),
       });
 
-      if (!res.ok || !res.body) throw new Error("API error");
+      if (!res.ok) throw new Error("API error");
+      const html = await res.text();
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let fullHtml = "";
-      let charCount = 0;
-      const ESTIMATED_TOTAL = 12000;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        for (const line of chunk.split("\n")) {
-          if (!line.startsWith("data: ")) continue;
-          const data = line.slice(6);
-          if (data === "[DONE]") continue;
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.text) {
-              fullHtml += parsed.text;
-              charCount += parsed.text.length;
-              setProgress(Math.min(95, Math.round((charCount / ESTIMATED_TOTAL) * 100)));
-            }
-          } catch {
-            // ignore
-          }
-        }
-      }
-
-      setGeneratedHtml(fullHtml);
+      clearInterval(timer);
+      setGeneratedHtml(html);
       setProgress(100);
       setGenState("done");
     } catch (err) {
+      clearInterval(timer);
       console.error(err);
       setGenState("error");
     }

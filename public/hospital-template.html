@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{CLINIC_NAME}}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAF8F5;
+      --dark: #1A1A1A;
+      --gold: #8B6F47;
+      --sub: #9A8878;
+      --line: #E8E0D5;
+      --white: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      font-weight: 300;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(250,248,245,0.97);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav.scrolled .nav-logo { color: var(--dark); }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+    nav.scrolled .nav-links a { color: var(--sub); }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+    nav.scrolled .nav-cta { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      background-image: url('{{HERO_IMAGE}}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #2C2A27;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.32);
+    }
+    .hero-content {
+      position: absolute;
+      bottom: 80px;
+      left: 60px;
+    }
+    .hero-clinic-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: 0.08em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .hero-oneliner {
+      margin-top: 16px;
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 0.02em;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.6);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.4);
+      animation: scrollBounce 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: scaleY(1); opacity: 0.5; }
+      50% { transform: scaleY(1.3); opacity: 1; }
+    }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 120px 60px; }
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .section-line {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 18px 0;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1.35;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+    .about-text {
+      padding: 120px 80px 120px 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .about-body {
+      margin-top: 28px;
+      font-size: 0.97rem;
+      line-height: 2;
+      color: var(--dark);
+    }
+    .about-body p + p { margin-top: 20px; }
+    .about-image {
+      background-image: url('{{INTRO_IMAGE}}');
+      background-size: cover;
+      background-position: center;
+      background-color: #E8E0D5;
+      min-height: 600px;
+    }
+
+    /* ── SERVICES ── */
+    #services {
+      background: var(--white);
+      text-align: center;
+    }
+    .services-header { margin-bottom: 60px; }
+    .services-header .section-line { margin: 18px auto; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .service-card {
+      background: var(--white);
+      padding: 48px 40px;
+      text-align: left;
+      transition: background 0.3s;
+    }
+    .service-card:hover { background: var(--bg); }
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-bottom: 20px;
+    }
+    .service-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .service-desc {
+      font-size: 0.87rem;
+      color: var(--sub);
+      line-height: 1.8;
+    }
+    .service-line {
+      width: 30px;
+      height: 1px;
+      background: var(--gold);
+      margin-top: 24px;
+    }
+
+    /* ── PROMISE ── */
+    #promise {
+      background: var(--dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .promise-bg-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 9rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.04);
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .promise-inner { position: relative; z-index: 1; }
+    .promise-inner .section-label { color: var(--gold); }
+    .promise-inner .section-title { color: var(--white); margin-bottom: 60px; }
+    .promise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px;
+    }
+    .promise-item {
+      border-left: 1px solid var(--gold);
+      padding-left: 24px;
+    }
+    .promise-item-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-bottom: 14px;
+    }
+    .promise-item-title {
+      font-size: 0.97rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .promise-item-desc {
+      font-size: 0.83rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.8;
+    }
+
+    /* ── CTA ── */
+    #cta {
+      background: var(--bg);
+      text-align: center;
+    }
+    .cta-en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: var(--dark);
+      letter-spacing: 0.05em;
+    }
+    .cta-sub {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: var(--sub);
+      line-height: 1.8;
+    }
+    .cta-btn {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 16px 52px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: transparent;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .cta-btn:hover { background: var(--gold); color: var(--bg); }
+    .cta-phone {
+      display: block;
+      margin-top: 32px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--dark);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 60px;
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #333;
+    }
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--sub);
+      letter-spacing: 0.05em;
+    }
+    .footer-copy {
+      font-size: 0.78rem;
+      color: #555;
+    }
+    .footer-bottom {
+      font-size: 0.75rem;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    /* ── FLOATING PHONE ── */
+    .float-phone {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--gold);
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(139,111,71,0.4);
+      z-index: 200;
+      text-decoration: none;
+    }
+    .float-phone svg { width: 20px; height: 20px; }
+
+    /* ── FADE IN ── */
+    .fade {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .hero-clinic-name { font-size: 2.8rem; }
+      .hero-content { left: 24px; bottom: 60px; }
+      .hero-scroll { right: 24px; }
+      section { padding: 80px 24px; }
+      #about { grid-template-columns: 1fr; }
+      .about-text { padding: 60px 24px; }
+      .about-image { min-height: 300px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .promise-grid { grid-template-columns: 1fr; gap: 36px; }
+      .promise-bg-text { font-size: 4rem; }
+      .cta-en { font-size: 2.2rem; }
+      footer { padding: 40px 24px; }
+      .footer-top { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .float-phone { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a class="nav-logo" href="#">{{CLINIC_NAME}}</a>
+    <ul class="nav-links">
+      <li><a href="#about">소개</a></li>
+      <li><a href="#services">진료 안내</a></li>
+      <li><a href="#promise">원장 철학</a></li>
+      <li><a href="#cta">오시는 길</a></li>
+    </ul>
+    <a class="nav-cta" href="#cta">상담 문의</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-clinic-name">{{CLINIC_NAME}}</p>
+      <p class="hero-oneliner">{{ONE_LINE}}</p>
+    </div>
+    <div class="hero-scroll">
+      Scroll
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-text fade">
+      <p class="section-label">About</p>
+      <div class="section-line"></div>
+      <h2 class="section-title">{{ABOUT_TITLE}}</h2>
+      <div class="about-body">
+        <p>{{DOCTOR_MOTIVATION}}</p>
+        <p>{{TARGET_PATIENT}}</p>
+      </div>
+    </div>
+    <div class="about-image"></div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header fade">
+      <p class="section-label">Medical Services</p>
+      <div class="section-line"></div>
+      <h2 class="section-title">진료 안내</h2>
+    </div>
+    <div class="services-grid">
+      {{SERVICE_CARDS}}
+    </div>
+  </section>
+
+  <!-- PROMISE -->
+  <section id="promise">
+    <div class="promise-bg-text">OUR PROMISE</div>
+    <div class="promise-inner">
+      <p class="section-label">Our Promise</p>
+      <div class="section-line"></div>
+      <h2 class="section-title">저희가 드리는 약속</h2>
+      <div class="promise-grid">
+        {{PROMISE_ITEMS}}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <p class="cta-en fade">Get in Touch</p>
+    <p class="cta-sub fade">{{CTA_SUB}}</p>
+    <a class="cta-btn fade" href="tel:{{PHONE}}">상담 문의하기</a>
+    <a class="cta-phone fade" href="tel:{{PHONE}}">{{PHONE}}</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <span class="footer-name">{{CLINIC_NAME}} · {{CLINIC_TYPE}} · {{LOCATION}}</span>
+      <span class="footer-copy">© 2026 {{CLINIC_NAME}}</span>
+    </div>
+    <p class="footer-bottom">
+      대표번호 {{PHONE}} · 진료시간 추후 안내<br />
+      본 사이트의 내용은 의료광고 심의를 준수합니다.
+    </p>
+  </footer>
+
+  <!-- FLOATING PHONE (mobile only) -->
+  <a class="float-phone" href="tel:{{PHONE}}" aria-label="전화 상담">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#FAF8F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+    </svg>
+  </a>
+
+  <script>
+    const nav = document.getElementById('nav')
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50)
+    })
+
+    const fades = document.querySelectorAll('.fade')
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
+      })
+    }, { threshold: 0.15 })
+    fades.forEach(el => observer.observe(el))
+  </script>
+</body>
+</html>
